@@ -4,7 +4,7 @@ import logging
 import dns.resolver as dns
 
 logger = logging.getLogger("commonfun")
-from config import configenv
+from config import config_env
 
 
 def checkdns(hostname: str, multi_ip: bool=False):
@@ -72,7 +72,7 @@ def conv_client(clients: str, op='general',
         list: ['host1'...]
     """
     if default_domain is None:
-        default_domain = configenv['DEFAULT_DOMAIN'] if 'DEFAULT_DOMAIN' in configenv else 'example.com'
+        default_domain = config_env['DEFAULT_DOMAIN'] if 'DEFAULT_DOMAIN' in config_env else 'example.com'
     rslist = []
     if clients.find(',') > 0:
         rslistb = clients.split(',')

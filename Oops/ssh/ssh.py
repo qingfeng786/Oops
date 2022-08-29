@@ -1,3 +1,4 @@
+import pathlib
 import sys
 from multiprocessing import Pool
 
@@ -7,7 +8,7 @@ from paramiko.ssh_exception import AuthenticationException
 from scp import SCPClient, SCPException
 
 from Oops.libs.commonfun import conv_client, checkdns
-from config import configenv
+from config import config_env
 import logging
 
 logger = logging.getLogger("ssh")
@@ -124,9 +125,12 @@ def runcmd(kwargs):
     try:
         host = kwargs[0]
         cmd = kwargs[1]
-        username = configenv['SSH_USER'] if 'SSH_USER' in configenv else 'root'
-        password = configenv['SSH_PASS'] if 'SSH_PASS' in configenv else 'password'
-        cl = Client(host, username=username, password=password)
+        username = config_env['SSH_USER'] if 'SSH_USER' in config_env else 'root'
+        password = config_env['SSH_PASS'] if 'SSH_PASS' in config_env else 'password'
+        key_filename = config_env['SSH_CERT'] if 'SSH_CERT' in config_env else 'None'
+        p = pathlib.PosixPath(key_filename)
+        key_filename = str(p.expanduser())
+        cl = Client(host, username=username, password=password, ssh_cert=key_filename)
         rs = cl.execute(cmd)
         cl.disconnect()
         return rs
